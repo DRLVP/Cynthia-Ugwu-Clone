@@ -36,12 +36,42 @@ function textAnimation(params) {
 textAnimation();
 
 
+let timeOut;
+
+// Skew mouse circle
+
+function skewCircle() {
+    clearTimeout(timeOut);
+
+    // set deafault scale value
+    let xscale = 1;
+    let yscale = 1;
+
+    var xprev = 0;
+    var yprev = 0;
+
+    window.addEventListener('mousemove', (details) => {
+        xscale = gsap.utils.clamp(.8, 1.2, details.clientX - xprev);
+        yscale = gsap.utils.clamp(.8, 1.2, details.clientY - yprev);
+
+        xprev = details.clientX;
+        yprev = details.clientY;
+
+        mouseFollower(xscale, yscale);
+
+        timeOut = setTimeout(() => {
+            document.querySelector("#mini-circle").style.transform = `translate(${details.clientX}px, ${details.clientY}px) scale(1,1)`;
+        }, 100)
+    })
+}
+skewCircle();
+
 // MOUSE CIRCLE FLLOWER
 
-function mouseFollower() {
+function mouseFollower(xscale, yscale) {
     window.addEventListener('mousemove', (details) => {
         const circle = document.querySelector("#mini-circle");
-        circle.style.transform = `translate(${details.clientX}px, ${details.clientY}px)`;
+        circle.style.transform = `translate(${details.clientX}px, ${details.clientY}px) scale(${xscale}, ${yscale})`;
     })
 };
 
